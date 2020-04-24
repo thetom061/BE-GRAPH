@@ -26,6 +26,8 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         this.currentSize = 0;
         this.array = new ArrayList<E>();
     }
+    
+    
 
     /**
      * Construct a copy of the given heap.
@@ -138,6 +140,9 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     @Override
     public void remove(E x) throws ElementNotFoundException {
         // TODO:
+    	while (this.array.indexOf(x)!=-1) {
+    		
+    	}
     }
 
     @Override
