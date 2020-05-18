@@ -7,6 +7,7 @@ import java.util.List;
 import org.insa.graphs.algorithm.AbstractSolution;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
+import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Label;
 import org.insa.graphs.model.Node;
@@ -51,17 +52,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //tant qu'il existe des sommets non marques
         while(!destinationLabel.getMarque() && !heap.isEmpty()){
         	Label label=heap.deleteMin();
-        	System.out.println(label.getNode().getId());
         	label.setMarque(true);
-        	List <Arc> successeurs=label.getNode().getSuccessors();
-        	
+        	List <Arc> successeurs=label.getNode().getSuccessors();	
         	for (Arc successeur: successeurs) {
+        		//pour vérifier si le mode de transport est autorisé	
         		if (!data.isAllowed(successeur)) {
                     continue;
                 }
-        		Label y=labels.get(successeur.getDestination().getId());
-        		System.out.println(y.getNode().getId());
-        		
+        		notifyNodeReached(successeur.getDestination());
+        		Label y=labels.get(successeur.getDestination().getId());           		
         		if (!y.getMarque()) {
         			float previousCost=y.getCost();
         			float cout=successeur.getLength()+label.getCost();
@@ -74,12 +73,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         				//si il est deja dans le tas on l'enlève
         				}	
         			if(previousCost!=Float.MAX_VALUE) {
-        					System.out.println("insert+remove");
-        					heap.remove(y);
-        					heap.insert(y);	
+        					//si il est quand meme dans le heap
+        					try {
+        						heap.remove(y);
+        					}catch(ElementNotFoundException e) {}
+        				heap.insert(y);	
         					
         			}else {
-        				System.out.println("only insert");
         				heap.insert(y);        				
         			}	
         		}
@@ -117,8 +117,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             Collections.reverse(arcs);
 
             // Create the final solution.
-            solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(data.getGraph(), arcs));
-        }   
+            Path path=new Path(data.getGraph(), arcs);
+            solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
+            
+            System.out.println(path.getLength());
+        }  
+        
         return solution;
     }
 
