@@ -1,15 +1,15 @@
 package org.insa.graphs.model;
 
 public class Label implements Comparable<Label>{
-	private Node sommet_courrant;
+	protected Node sommet_courrant;
 	
-	private Arc previousArc;
+	protected Arc previousArc;
 	
-	private boolean marque;
+	protected boolean marque;
 	
-	private float cout;
+	protected float cout;
 	
-	private Label previousLabel;
+	protected Label previousLabel;
 	
 	public Label(Node node) {
 		this.sommet_courrant=node;
@@ -18,6 +18,9 @@ public class Label implements Comparable<Label>{
 		this.cout=Float.MAX_VALUE;
 		this.previousLabel = null;
 	}
+	
+	
+	
 	public Node getNode() {
 		return sommet_courrant;
 	}

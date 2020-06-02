@@ -61,4 +61,10 @@ public class BinarySearchTree<E extends Comparable<E>> implements PriorityQueue<
         return min;
     }
 
+	@Override
+	public boolean isValid() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

@@ -140,29 +140,25 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     @Override
     public void remove(E x) throws ElementNotFoundException {
         // TODO:
+    	//si tas vide
     	  if(array.isEmpty())
               throw new ElementNotFoundException(x);
-
-          boolean trouve = false;
-          int index = 0;
-
-          while(!trouve && index < this.size()) {
-              if(array.get(index).equals(x)) {
-                  trouve = true;
-
-                  arraySet(index, array.get(--currentSize));
-
-                  if (array.get(index).compareTo(array.get(indexParent(index))) < 0 ){
-                      percolateUp(index);
-                  } else {
-                      percolateDown(index);
-                  }
-              }
-              else
-                  index++;
+    	  
+    	  //si pas dans le tas renvoie l'exception    	  
+    	  //si indice superieur à la taille du tas il ne fait deja plus partie du tas
+          int index = this.array.indexOf(x);
+          if (index==-1 || index>= this.currentSize) {
+        	  throw new ElementNotFoundException(x);
           }
-          if(!trouve)
-              throw new ElementNotFoundException(x);
+          //on le met au dernier indice
+          this.arraySet(index, this.array.get(this.currentSize-1));
+          //on percolate pour que le tas soit valide
+          if (array.get(index).compareTo(array.get(indexParent(index)))<0) {
+        	  this.percolateUp(index);
+          }else {
+        	  this.percolateDown(index);
+          }
+          this.currentSize--;
       }
 
     @Override
@@ -226,5 +222,16 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public String toString() {
         return BinaryHeapFormatter.toStringTree(this, 8);
     }
-
+    
+    //vérifie la validité du tas
+    public boolean isValid() {
+    	for (int i=1; i<this.currentSize;i++) {
+    		E fils=this.array.get(i);
+    		E pere=this.array.get(indexParent(i));
+    		if (fils.compareTo(pere)<0) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 }
